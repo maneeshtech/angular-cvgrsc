@@ -1,0 +1,139 @@
+<section class="container-fluid header totalHeader">
+  <h1 class="totalExpense">
+    Total Expense: {{ totalExpense | currency: 'USD':'symbol' }}
+  </h1>
+</section>
+<div class="expenseList">
+  <h2 class="listHeader">Expenses List</h2>
+  <div id="search-component">
+    <label for="search-box">Search By Date</label>
+    <input #searchBox1 type="date" id="search-box" />
+    <input #searchBox2 type="date" id="search-box" />
+    <br />
+    <button
+      id="search-button"
+      class="search-button"
+      (click)="search(searchBox1.value, searchBox2.value)"
+    >
+      Search
+    </button>
+    <button
+      id="reset-button"
+      class="search-button"
+      (click)="searchBox1.value = ''; searchBox2.value = ''"
+    >
+      Reset
+    </button>
+  </div>
+  <ul class="transactions" *ngIf="transactions != undefined">
+    <li *ngFor="let transaction of transactions; let i = index">
+      <a>
+        <span class="badge">{{ i + 1 }}</span>
+        <span *ngFor="let category of categories">
+          <span class="badge" *ngIf="category.id == transaction.category">{{
+            category.name
+          }}</span>
+        </span>
+        <span class="badge">{{
+          transaction.amount | currency: 'USD':'symbol'
+        }}</span>
+        <span class="badge">
+          {{ transaction.date | date: 'dd/MM/yyyy' }}
+        </span>
+        <button
+          class="edit"
+          title="edit transaction"
+          (click)="edit(transaction)"
+        >
+          Edit
+        </button>
+        <button
+          class="delete"
+          title="delete transaction"
+          (click)="delete(transaction)"
+        >
+          x
+        </button>
+      </a>
+    </li>
+  </ul>
+</div>
+<div *ngIf="!editDiv" class="addEditForm">
+  <div class="addEditFormContent">
+    <h2>Add Transactions</h2>
+    <label for="new-category">Category: </label>
+    <br />
+    <select class="form-control" id="new-category" #categoryName>
+      <option *ngFor="let item of categories" [value]="item.id">
+        {{ item.name }}
+      </option>
+    </select>
+    <br />
+    <label for="new-amount">Amount: </label>
+    <input id="new-amount" type="number" #amountName />
+    <label for="new-date">Date: </label>
+    <input id="new-date" type="date" #dateName />
+    <button
+      class="add-button"
+      (click)="
+        add(categoryName.value, dateName.value, amountName.value);
+        categoryName.value = '';
+        amountName.value = '';
+        dateName.value = ''
+      "
+    >
+      Add Transactions
+    </button>
+    <div></div>
+  </div>
+</div>
+<div *ngIf="editDiv && editItemValue != undefined" class="addEditForm">
+  <div class="addEditFormContent">
+    <h2>Edit Transactions</h2>
+    <label for="new-category">Category: </label>
+    <br />
+    <select
+      class="form-control"
+      id="new-category"
+      #categoryName
+      value="{{ editItemValue.category }}"
+    >
+      <option *ngFor="let item of categories" [value]="item.id">
+        {{ item.name }}
+      </option>
+    </select>
+    <br />
+    <label for="new-amount">Amount: </label>
+    <input
+      id="new-amount"
+      type="number"
+      #amountName
+      value="{{ editItemValue.amount }}"
+    />
+    <label for="new-date">Date: </label>
+    <input
+      id="new-date"
+      type="date"
+      #dateName
+      value="{{ editItemValue.date }}"
+    />
+    <input id="editId" type="hidden" #editId value="{{ editItemValue.id }}" />
+    <button
+      class="add-button"
+      (click)="
+        update(
+          editId.value,
+          categoryName.value,
+          dateName.value,
+          amountName.value
+        );
+        editId.value = '';
+        categoryName.value = '';
+        amountName.value = '';
+        dateName.value = ''
+      "
+    >
+      Update Transactions
+    </button>
+  </div>
+</div>

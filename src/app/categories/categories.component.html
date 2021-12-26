@@ -1,0 +1,52 @@
+<div class="categoryList">
+  <h2 class="listHeader">Categories List</h2>
+  <ul class="categories" *ngIf="categories != undefined">
+    <li *ngFor="let category of categories; let i = index">
+      <a>
+        <span class="badge">{{ i + 1 }}</span>
+        <span class="badge">{{ category.name }}</span>
+        <button class="edit" title="edit category" (click)="edit(category)">
+          Edit
+        </button>
+        <button
+          class="delete"
+          title="delete category"
+          (click)="delete(category)"
+        >
+          x
+        </button>
+      </a>
+    </li>
+  </ul>
+</div>
+<div *ngIf="!editDiv" class="addEditForm">
+  <div class="addEditFormContent">
+    <h2>Add Categories</h2>
+    <label for="new-amount">Name: </label>
+    <input id="new-amount" #categoryName />
+    <button
+      class="add-button"
+      (click)="add(categoryName.value); categoryName.value = ''"
+    >
+      Add Categories
+    </button>
+  </div>
+</div>
+<div *ngIf="editDiv && editItemValue != undefined" class="addEditForm">
+  <div class="addEditFormContent">
+    <h2>Edit Categories</h2>
+    <label for="new-amount">Name: </label>
+    <input id="new-amount" #categoryName value="{{ editItemValue.name }}" />
+    <input id="editId" type="hidden" #editId value="{{ editItemValue.id }}" />
+    <button
+      class="add-button"
+      (click)="
+        update(editId.value, categoryName.value);
+        editId.value = '';
+        categoryName.value = ''
+      "
+    >
+      Update Categories
+    </button>
+  </div>
+</div>
